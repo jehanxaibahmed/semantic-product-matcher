@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using OpenAI.Embeddings;
 using ProductMatcher.Application.Abstractions;
+using ProductMatcher.Application.Matching;
 using ProductMatcher.Infrastructure.Background;
 using ProductMatcher.Infrastructure.Catalogue;
 using ProductMatcher.Infrastructure.Embeddings;
@@ -23,6 +24,8 @@ public static class DependencyInjection
         services.AddDbContextFactory<MatcherDbContext>(o => o.UseNpgsql(connectionString, npgsql => npgsql.UseVector()));
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductSearch, ProductSearch>();
+        services.AddScoped<IMatchHistoryRepository, MatchHistoryRepository>();
+        services.Configure<RerankingOptions>(configuration.GetSection(RerankingOptions.SectionName));
         services.AddSingleton<ICatalogueParser, CsvCatalogueParser>();
 
         var options = configuration.GetSection(EmbeddingOptions.SectionName).Get<EmbeddingOptions>() ?? new();

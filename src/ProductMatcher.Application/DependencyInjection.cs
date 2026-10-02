@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddScoped<CatalogueImportService>();
         services.AddScoped<CatalogueEmbeddingService>();
         services.AddScoped<MatchService>();
+        services.AddScoped<MatchFeedbackService>();
         return services;
     }
 }
