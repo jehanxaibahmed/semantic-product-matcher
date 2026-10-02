@@ -14,4 +14,14 @@ public sealed class EmbeddingOptions
 
     /// <summary>Runs the background job that embeds new and changed products.</summary>
     public bool BackgroundJob { get; set; } = true;
+
+    public EmbeddingCacheOptions Cache { get; set; } = new();
+}
+
+public sealed class EmbeddingCacheOptions
+{
+    public bool Enabled { get; set; } = true;
+
+    /// <summary>Maximum vectors kept in memory (about 6 KB each at 1536 dimensions).</summary>
+    public int MemoryEntries { get; set; } = 10_000;
 }

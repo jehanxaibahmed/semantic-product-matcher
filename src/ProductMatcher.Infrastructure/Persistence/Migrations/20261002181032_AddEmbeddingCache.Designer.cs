@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pgvector;
@@ -12,9 +13,11 @@ using ProductMatcher.Infrastructure.Persistence;
 namespace ProductMatcher.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(MatcherDbContext))]
-    partial class MatcherDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261002181032_AddEmbeddingCache")]
+    partial class AddEmbeddingCache
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

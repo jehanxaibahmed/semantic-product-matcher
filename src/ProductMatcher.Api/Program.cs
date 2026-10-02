@@ -27,6 +27,7 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapCatalogueEndpoints();
 app.MapMatchEndpoints();
+app.MapEmbeddingEndpoints();
 
 await app.RunAsync();
 
