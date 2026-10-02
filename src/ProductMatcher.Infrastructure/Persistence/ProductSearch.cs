@@ -9,16 +9,26 @@ namespace ProductMatcher.Infrastructure.Persistence;
 internal sealed class ProductSearch(MatcherDbContext db) : IProductSearch
 {
     public async Task<IReadOnlyList<MatchCandidate>> SearchAsync(
-        float[] queryVector, int topK, CancellationToken cancellationToken)
+        float[] queryVector, int topK, IReadOnlyCollection<Guid> alwaysInclude, CancellationToken cancellationToken)
     {
         var vector = new Vector(queryVector);
+        var pinned = alwaysInclude.ToArray();
 
+        // The first branch uses the HNSW index. The second adds products the customer confirmed for
+        // this phrase, so history can promote them even when they fall outside the nearest k.
         var rows = await db.Database.SqlQuery<SearchRow>($"""
-            SELECT "Id", "Sku", "Name", "Category", "Unit", "Embedding" <=> {vector} AS "Distance"
-            FROM products
-            WHERE "Embedding" IS NOT NULL
-            ORDER BY "Embedding" <=> {vector}
-            LIMIT {topK}
+            SELECT "Id", "Sku", "Name", "Category", "Unit", "Distance" FROM (
+                (SELECT "Id", "Sku", "Name", "Category", "Unit", "Embedding" <=> {vector} AS "Distance"
+                 FROM products
+                 WHERE "Embedding" IS NOT NULL
+                 ORDER BY "Embedding" <=> {vector}
+                 LIMIT {topK})
+                UNION
+                (SELECT "Id", "Sku", "Name", "Category", "Unit", "Embedding" <=> {vector} AS "Distance"
+                 FROM products
+                 WHERE "Embedding" IS NOT NULL AND "Id" = ANY({pinned}))
+            ) AS candidates
+            ORDER BY "Distance"
             """).ToListAsync(cancellationToken);
 
         return rows

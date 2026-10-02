@@ -7,9 +7,16 @@ internal sealed class FakeProductSearch(params MatchCandidate[] candidates) : IP
 {
     public int Calls { get; private set; }
 
-    public Task<IReadOnlyList<MatchCandidate>> SearchAsync(float[] queryVector, int topK, CancellationToken cancellationToken)
+    public List<int> RequestedTopK { get; } = [];
+
+    public Task<IReadOnlyList<MatchCandidate>> SearchAsync(
+        float[] queryVector, int topK, IReadOnlyCollection<Guid> alwaysInclude, CancellationToken cancellationToken)
     {
         Calls++;
-        return Task.FromResult<IReadOnlyList<MatchCandidate>>(candidates.Take(topK).ToList());
+        RequestedTopK.Add(topK);
+        var nearest = candidates.OrderByDescending(c => c.Similarity).Take(topK);
+        var pinned = candidates.Where(c => alwaysInclude.Contains(c.ProductId));
+        return Task.FromResult<IReadOnlyList<MatchCandidate>>(
+            nearest.Union(pinned).OrderByDescending(c => c.Similarity).ToList());
     }
 }
