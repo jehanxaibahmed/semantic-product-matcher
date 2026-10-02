@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\ProductMatcher.Application\ProductMatcher.Application.csproj" />
     <ProjectReference Include="..\..\src\ProductMatcher.Infrastructure\ProductMatcher.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\tools\ProductMatcher.Benchmark\ProductMatcher.Benchmark.csproj" />
   </ItemGroup>
 
 </Project>

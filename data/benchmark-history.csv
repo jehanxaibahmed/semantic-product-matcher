@@ -1,0 +1,17 @@
+customer_id,query,expected_sku
+bistro-42,the usual reds,FP-1009
+bistro-42,peppers,FP-1002
+bistro-42,cheese,DA-2010
+bistro-42,milk,DA-2002
+bistro-42,gloves,CL-9503
+bistro-42,oil,DG-6020
+bistro-42,chips,FR-9002
+bistro-42,cream,DA-2005
+cafe-7,the usual reds,FP-1006
+cafe-7,peppers,FP-1005
+cafe-7,cheese,DA-2012
+cafe-7,milk,DA-2004
+cafe-7,gloves,CL-9502
+cafe-7,oil,DG-6019
+cafe-7,chips,FR-9001
+cafe-7,cream,DA-2006
