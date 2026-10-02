@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ProductMatcher.Api/ProductMatcher.Api.csproj" />
+    <Project Path="src/ProductMatcher.Application/ProductMatcher.Application.csproj" />
+    <Project Path="src/ProductMatcher.Domain/ProductMatcher.Domain.csproj" />
+    <Project Path="src/ProductMatcher.Infrastructure/ProductMatcher.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ProductMatcher.IntegrationTests/ProductMatcher.IntegrationTests.csproj" />
+    <Project Path="tests/ProductMatcher.UnitTests/ProductMatcher.UnitTests.csproj" />
+  </Folder>
+</Solution>
