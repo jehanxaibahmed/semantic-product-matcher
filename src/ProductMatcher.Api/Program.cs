@@ -1,9 +1,31 @@
+using ProductMatcher.Api.Endpoints;
+using ProductMatcher.Application;
+using ProductMatcher.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddProblemDetails();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+app.UseExceptionHandler();
 
-app.Run();
+if (app.Configuration.GetValue("Database:MigrateOnStartup", true))
+{
+    await app.Services.MigrateDatabaseAsync();
+}
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+app.MapCatalogueEndpoints();
+
+await app.RunAsync();
 
 public partial class Program;
