@@ -11,7 +11,7 @@ internal static class ReportWriter
     public static string Render(IReadOnlyList<ProviderResult> results, DateTimeOffset generatedAt)
     {
         var sb = new StringBuilder();
-        var names = results.Select(r => $"{r.Provider} (`{r.Model}`)").ToList();
+        var names = results.Select(r => r.Provider.Contains(r.Model) ? $"`{r.Provider}`" : $"{r.Provider} (`{r.Model}`)").ToList();
 
         Line(sb, "# Benchmark");
         Line(sb);
@@ -19,7 +19,7 @@ internal static class ReportWriter
         Line(sb);
         Line(sb, "```");
         Line(sb, "docker compose up -d");
-        Line(sb, "dotnet run --project tools/ProductMatcher.Benchmark -- --providers Local,OpenAI");
+        Line(sb, "dotnet run --project tools/ProductMatcher.Benchmark -- --providers Local,OpenAI,Ollama:nomic-embed-text,Ollama:bge-m3");
         Line(sb, "```");
         Line(sb);
         var first = results[0];
