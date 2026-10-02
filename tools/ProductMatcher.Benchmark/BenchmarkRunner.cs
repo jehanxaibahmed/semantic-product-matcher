@@ -63,8 +63,12 @@ internal sealed class BenchmarkRunner(BenchmarkSettings settings)
             new ConfiguredThresholds(thresholds.AutoAcceptScore, thresholds.MinMargin, thresholds.ReviewScore));
     }
 
-    private IHost BuildHost(string provider)
+    /// <summary>A provider spec is <c>Local</c>, <c>OpenAI</c> or <c>Ollama:&lt;model&gt;</c> (for example <c>Ollama:nomic-embed-text</c>).</summary>
+    private IHost BuildHost(string spec)
     {
+        var separator = spec.IndexOf(':');
+        var provider = separator < 0 ? spec : spec[..separator];
+        var model = separator < 0 ? null : spec[(separator + 1)..];
         var builder = Host.CreateApplicationBuilder();
         builder.Configuration.Sources.Clear();
         builder.Configuration
@@ -75,6 +79,11 @@ internal sealed class BenchmarkRunner(BenchmarkSettings settings)
                 ["Embeddings:Provider"] = provider,
                 ["Embeddings:BackgroundJob"] = "false",
             });
+        if (model is not null)
+        {
+            builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?> { ["Embeddings:Model"] = model });
+        }
+
         builder.Logging.ClearProviders();
         builder.Logging.AddFilter(_ => false);
 

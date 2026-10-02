@@ -16,13 +16,15 @@ Customers rarely use exact product codes: they write "2 boxes of the large red p
 
 Measured on a synthetic 151-product catering catalogue with 131 labelled messy queries. The queries cover order phrasing, typos, shorthand, synonyms, near-variants and out-of-catalogue items. Full report: [docs/benchmark.md](docs/benchmark.md).
 
-| Metric | Offline embedder | OpenAI `text-embedding-3-small` |
-| --- | --- | --- |
-| Top-1 accuracy | 87.8% | **97.6%** |
-| Hit@5 | 95.1% | **100%** |
-| Auto-accept precision / coverage | 98.8% / 69.1% | **99.1% / 86.2%** |
-| Personalised top-1, before → after 3 confirmations | 25% → 94% | 44% → **100%** |
-| Latency p50, cold → cached | 3.0 → 1.4 ms | 203 → **2.1 ms** |
+| Metric | Offline embedder | Ollama `nomic-embed-text` | Ollama `bge-m3` | OpenAI `text-embedding-3-small` |
+| --- | --- | --- | --- | --- |
+| Top-1 accuracy | 87.8% | 91.9% | 91.9% | **97.6%** |
+| Hit@5 | 95.1% | 98.4% | 97.6% | **100%** |
+| Auto-accept precision / coverage | 98.8% / 69.1% | 98.0% / 79.7% | 100% / 61.8% | **99.1% / 86.2%** |
+| Personalised top-1, before → after 3 confirmations | 25% → 94% | 44% → 100% | 44% → 100% | 44% → **100%** |
+| Latency p50, cold → cached | 3.4 → 1.4 ms | 29 → 1.1 ms | 164 → 1.2 ms | 203 → **2.1 ms** |
+
+The Ollama and offline columns were measured on 2026-10-03 on a developer machine; the OpenAI column is from the earlier 2026-10-02 run. Local-model latency depends on your hardware.
 
 With OpenAI, 86% of order lines are matched automatically at 99% precision. The rest go to review, and an out-of-catalogue item is never auto-accepted. A repeat order makes **zero** embedding API calls because of the cache.
 
@@ -51,6 +53,19 @@ curl localhost:5180/api/match -H 'content-type: application/json' \
 ```
 
 To use OpenAI instead of the offline embedder, set `OPENAI_API_KEY` and `Embeddings__Provider=OpenAI`. Products embedded with the previous model are detected and re-embedded automatically.
+
+## 🏠 Run fully locally
+
+No API key and no network: embed with a model served by [Ollama](https://ollama.com). The models are 768 and 1024 dimensions, so vectors are zero-padded to the stored 1536 (this leaves cosine similarity unchanged, and the schema is untouched).
+
+```bash
+ollama pull nomic-embed-text          # or: ollama pull bge-m3
+docker compose up -d
+Embeddings__Provider=Ollama Embeddings__Model=nomic-embed-text \
+  dotnet run --project src/ProductMatcher.Api --urls http://localhost:5180
+```
+
+`Embeddings:BaseUrl` defaults to `http://localhost:11434` and `Embeddings:TimeoutSeconds` to 120. Confidence thresholds for both models are in `Confidence:Models`. Products embedded with a different model are detected and re-embedded automatically, and the embedding cache is keyed by model, so vectors from different models are never mixed. For a fully offline run with no model server at all, use `Embeddings__Provider=Local`.
 
 ## 🔌 API
 
@@ -81,8 +96,8 @@ An example decision from `/api/match`:
 ## 🧪 Tests and benchmark
 
 ```bash
-dotnet test                                                        # 62 unit + 13 integration (needs Docker)
-dotnet run --project tools/ProductMatcher.Benchmark -- --providers Local,OpenAI
+dotnet test                                                        # 72 unit + 13 integration (needs Docker)
+dotnet run --project tools/ProductMatcher.Benchmark -- --providers Local,OpenAI,Ollama:nomic-embed-text,Ollama:bge-m3
 ```
 
 The benchmark regenerates [docs/benchmark.md](docs/benchmark.md) and recommends confidence thresholds for each model. The current ones are in `Confidence:Models` in `src/ProductMatcher.Api/appsettings.json`.

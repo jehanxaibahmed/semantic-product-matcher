@@ -55,31 +55,54 @@ public static class DependencyInjection
     {
         services.AddSingleton<EmbeddingCacheMetrics>();
 
+        if (string.Equals(options.Provider, "Ollama", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddHttpClient(OllamaHttpClientName, client =>
+            {
+                client.BaseAddress = new Uri(options.BaseUrl.TrimEnd('/') + "/");
+                client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+            });
+        }
+
         if (!options.Cache.Enabled)
         {
-            services.AddSingleton(_ => CreateEmbeddingProvider(options));
+            services.AddSingleton(sp => CreateEmbeddingProvider(options, sp));
             return;
         }
 
         services.AddSingleton<IEmbeddingCacheStore, PostgresEmbeddingCacheStore>();
         services.AddSingleton<IEmbeddingProvider>(sp => new CachedEmbeddingProvider(
-            CreateEmbeddingProvider(options),
+            CreateEmbeddingProvider(options, sp),
             new MemoryCache(new MemoryCacheOptions { SizeLimit = options.Cache.MemoryEntries }),
             sp.GetRequiredService<IEmbeddingCacheStore>(),
             sp.GetRequiredService<EmbeddingCacheMetrics>(),
             sp.GetRequiredService<TimeProvider>()));
     }
 
-    private static IEmbeddingProvider CreateEmbeddingProvider(EmbeddingOptions options)
+    private const string OllamaHttpClientName = "ollama";
+
+    private static IEmbeddingProvider CreateEmbeddingProvider(EmbeddingOptions options, IServiceProvider services)
     {
         if (string.Equals(options.Provider, "Local", StringComparison.OrdinalIgnoreCase))
         {
             return new LocalHashingEmbeddingProvider();
         }
 
+        if (string.Equals(options.Provider, "Ollama", StringComparison.OrdinalIgnoreCase))
+        {
+            if (string.IsNullOrWhiteSpace(options.Model) || options.Model.StartsWith("text-embedding-", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "Ollama provider selected but Embeddings:Model is not an Ollama model. Set it to e.g. 'nomic-embed-text' or 'bge-m3'.");
+            }
+
+            var http = services.GetRequiredService<IHttpClientFactory>().CreateClient(OllamaHttpClientName);
+            return new OllamaEmbeddingProvider(http, options.Model);
+        }
+
         if (!string.Equals(options.Provider, "OpenAI", StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException($"Unknown embedding provider '{options.Provider}'. Use 'OpenAI' or 'Local'.");
+            throw new InvalidOperationException($"Unknown embedding provider '{options.Provider}'. Use 'OpenAI', 'Ollama' or 'Local'.");
         }
 
         var apiKey = options.ApiKey ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY")

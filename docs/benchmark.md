@@ -185,3 +185,63 @@ The boost is capped (0.25 for the phrase plus 0.05 for the product), so history 
 - The thresholds are calibrated on the same queries they're reported on. Re-calibrate on held-out real orders before relying on auto-accept.
 - OpenAI embeddings are not exactly deterministic, so its numbers can shift by about a point between runs. The local embedder is fully deterministic.
 - Latency is measured in-process against local Postgres. OpenAI cold latency includes a network round trip per query.
+
+## Local Ollama models
+
+Measured 2026-10-03 on the same catalogue and queries, with the models served by a local Ollama (`nomic-embed-text`, 768 dimensions; `bge-m3`, 1024 dimensions). Vectors are zero-padded to the stored 1536 dimensions, which does not change cosine similarity. The OpenAI column above was not re-run in this pass (no API key available), so it is kept from the earlier run. The Local column was re-run and reproduced the figures above exactly (apart from latency).
+
+```
+ollama pull nomic-embed-text && ollama pull bge-m3
+dotnet run --project tools/ProductMatcher.Benchmark -- --providers Local,Ollama:nomic-embed-text,Ollama:bge-m3
+```
+
+The calibrated thresholds in `Confidence:Models` for both models come from this run's sweep (precision target 98%, no out-of-catalogue auto-accept). Cosine scores from these models are compressed into a high range, so their thresholds sit well above OpenAI's. Latency was measured on one developer machine and depends on its hardware.
+
+Caveats specific to these results:
+
+- `bge-m3` sent none of the 8 out-of-catalogue queries to NoMatch at its calibrated review floor (they land in NeedsReview, never AutoAccept). `nomic-embed-text` sent 5 of 8. Both are worse than the offline embedder here, which sent all 8.
+- `nomic-embed-text` has 2 wrong auto-accepts at its calibrated thresholds; `bge-m3` has 0 but auto-accepts fewer lines.
+- The same small-sample, same-author, calibrated-on-the-test-set caveats in the Caveats section above apply.
+
+### Headline
+
+| Metric | Local (`local-hashing-v1`) | `Ollama:nomic-embed-text` | `Ollama:bge-m3` |
+| --- | --- | --- | --- |
+| Top-1 accuracy | 87.8% | 91.9% | 91.9% |
+| Hit@3 | 93.5% | 97.6% | 97.6% |
+| Hit@5 | 95.1% | 98.4% | 97.6% |
+| MRR | 0.910 | 0.945 | 0.946 |
+| Auto-accept precision (calibrated) | 98.8% | 98.0% | 100.0% |
+| Auto-accept coverage (calibrated) | 69.1% | 79.7% | 61.8% |
+| Out-of-catalogue → NoMatch (calibrated) | 100.0% | 62.5% | 0.0% |
+| Personalised top-1 before → after | 25.0% → 93.8% | 43.8% → 100.0% | 43.8% → 100.0% |
+| Latency p50 / p95, cold | 3.4 ms / 5.8 ms | 29 ms / 43 ms | 164 ms / 251 ms |
+| Latency p50 / p95, warm cache | 1.4 ms / 1.8 ms | 1.1 ms / 1.2 ms | 1.2 ms / 2.0 ms |
+| Catalogue embed time | 434 ms | 1651 ms | 3045 ms |
+
+### Top-1 accuracy by query kind
+
+| Kind | Queries | Local (`local-hashing-v1`) | `Ollama:nomic-embed-text` | `Ollama:bge-m3` |
+| --- | --- | --- | --- | --- |
+| order-phrase | 18 | 100.0% | 100.0% | 100.0% |
+| shorthand | 23 | 78.3% | 95.7% | 95.7% |
+| synonym | 39 | 74.4% | 87.2% | 76.9% |
+| typo | 15 | 100.0% | 86.7% | 100.0% |
+| variant | 28 | 100.0% | 92.9% | 100.0% |
+
+### Confidence bands
+
+Precision target for auto-accept: **98.0%**, with no out-of-catalogue query auto-accepted. Coverage is the share of in-catalogue queries that are auto-accepted *and* correct, so they need no review.
+
+|  | Local (`local-hashing-v1`) | `Ollama:nomic-embed-text` | `Ollama:bge-m3` |
+| --- | --- | --- | --- |
+| Thresholds in appsettings (auto / margin / review) | 0.40 / 0.10 / 0.225 | 0.65 / 0.00 / 0.575 | 0.60 / 0.00 / 0.400 |
+| Recommended thresholds (auto / margin / review) | 0.40 / 0.10 / 0.225 | 0.65 / 0.00 / 0.575 | 0.60 / 0.00 / 0.400 |
+| Auto-accepted | 86 | 100 | 76 |
+| Auto-accept precision | 98.8% | 98.0% | 100.0% |
+| Wrong auto-accepts | 1 | 2 | 0 |
+| Needs review | 31 | 19 | 54 |
+| In-catalogue sent to NoMatch | 6 | 7 | 1 |
+| Out-of-catalogue → NoMatch | 8 / 8 | 5 / 8 | 0 / 8 |
+
+The band rows above use the thresholds in appsettings. Out-of-catalogue queries that miss NoMatch land in NeedsReview, never AutoAccept, so a person still sees them.
