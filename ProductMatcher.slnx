@@ -9,4 +9,7 @@
     <Project Path="tests/ProductMatcher.IntegrationTests/ProductMatcher.IntegrationTests.csproj" />
     <Project Path="tests/ProductMatcher.UnitTests/ProductMatcher.UnitTests.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/ProductMatcher.Benchmark/ProductMatcher.Benchmark.csproj" />
+  </Folder>
 </Solution>

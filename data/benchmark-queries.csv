@@ -1,0 +1,132 @@
+query,expected_sku,kind
+2 boxes of the large red peppers,FP-1001,order-phrase
+a case of cherry tomatoes please,FP-1023,order-phrase
+3 x whole milk,DA-2001,order-phrase
+can we get some blue roll,CL-9501,order-phrase
+two sacks of maris pipers,FP-1014,order-phrase
+1x salmon fillets skin on,FI-4001,order-phrase
+5 trays of large free range eggs,DA-2017,order-phrase
+a bag of rocket thanks,FP-1021,order-phrase
+4 tubs greek yoghurt,DA-2015,order-phrase
+our usual brown onions 25kg,FP-1008,order-phrase
+2 x basmati 10kg,DG-6001,order-phrase
+a box of lemons pls,FP-1034,order-phrase
+6 tins chopped tomatoes,DG-6013,order-phrase
+1 case cola cans,BV-8007,order-phrase
+3 packs streaky bacon,MP-3011,order-phrase
+a couple of boxes of bananas,FP-1037,order-phrase
+2 x 5l olive oil extra virgin,DG-6019,order-phrase
+10 sourdough loaves,BK-5003,order-phrase
+red pepers large,FP-1001,typo
+chiken breast fillets,MP-3001,typo
+brocoli,FP-1029,typo
+mozzerella grated,DA-2011,typo
+parmasan,DA-2013,typo
+avacados,FP-1036,typo
+courgetes,FP-1027,typo
+expresso coffee beans,BV-8001,typo
+sausges cumberland,MP-3009,typo
+mayonaise,SC-7002,typo
+balsamic vinager,SC-7007,typo
+grnd cummin,DG-6025,typo
+croisants,BK-5006,typo
+strawberies,FP-1039,typo
+sunflower oyl 20l,DG-6021,typo
+semi skimmed,DA-2002,shorthand
+skimmed milk,DA-2003,shorthand
+dbl cream,DA-2005,shorthand
+evoo,DG-6019,shorthand
+choc powder,BV-8009,shorthand
+oj,BV-8004,shorthand
+oj not from concentrate,BV-8004,shorthand
+sr flour,DG-6008,shorthand
+pl flour,DG-6007,shorthand
+veg stock,DG-6017,shorthand
+lean mince,MP-3006,shorthand
+mince 20%,MP-3005,shorthand
+gloves med,CL-9502,shorthand
+gloves large,CL-9503,shorthand
+bin bags,CL-9508,shorthand
+12oz cups,CL-9509,shorthand
+qtr pounders,FR-9007,shorthand
+spring rolls veg,FR-9008,shorthand
+sweet chilli,SC-7006,shorthand
+butter portions,DA-2009,shorthand
+ketchup sachets,SC-7008,shorthand
+mayo sachets,SC-7009,shorthand
+tea bags,BV-8003,shorthand
+scallions,FP-1010,synonym
+zucchini,FP-1027,synonym
+eggplant,FP-1028,synonym
+cilantro,FP-1040,synonym
+fries skin on,FR-9001,synonym
+thick cut chips,FR-9002,synonym
+kitchen roll blue,CL-9501,synonym
+paper towels blue,CL-9501,synonym
+aluminium foil,CL-9505,synonym
+tin foil,CL-9505,synonym
+plastic wrap,CL-9504,synonym
+serviettes,CL-9510,synonym
+dish soap,CL-9506,synonym
+surface cleaner spray,CL-9507,synonym
+refuse sacks,CL-9508,synonym
+fizzy water,BV-8006,synonym
+still water bottles,BV-8005,synonym
+coke,BV-8007,synonym
+diet coke,BV-8008,synonym
+prawns,FI-4004,synonym
+shrimp raw,FI-4004,synonym
+smoked haddock,FI-4003,synonym
+burger buns,BK-5004,synonym
+bread rolls,BK-5005,synonym
+wraps,BK-5007,synonym
+flatbread naan,BK-5008,synonym
+porridge,DG-6012,synonym
+oats,DG-6012,synonym
+canola oil,DG-6020,synonym
+stock cubes chicken,DG-6018,synonym
+pasta tubes,DG-6004,synonym
+pasta twists,DG-6006,synonym
+risotto rice,DG-6003,synonym
+garbanzo beans,DG-6015,synonym
+heinz beans,DG-6014,synonym
+yogurt plain,DA-2016,synonym
+barista oat,DA-2004,synonym
+plant milk for coffee,DA-2004,synonym
+liquid egg,DA-2019,synonym
+red bell peppers small,FP-1002,variant
+yellow peppers,FP-1003,variant
+green peppers,FP-1004,variant
+traffic light peppers,FP-1005,variant
+green chillies,FP-1007,variant
+red chillies,FP-1006,variant
+red onions,FP-1009,variant
+peeled garlic,FP-1013,variant
+garlic bulbs,FP-1012,variant
+new potatoes baby,FP-1015,variant
+chantenay carrots,FP-1018,variant
+tenderstem,FP-1030,variant
+chestnut mushrooms,FP-1033,variant
+closed cup mushrooms,FP-1032,variant
+unsalted butter,DA-2007,variant
+salted butter blocks,DA-2008,variant
+buffalo mozzarella,DA-2012,variant
+medium eggs,DA-2018,variant
+chicken thighs boneless,MP-3002,variant
+sirloin steaks,MP-3007,variant
+back bacon,MP-3010,variant
+caster sugar,DG-6009,variant
+granulated sugar 25kg,DG-6010,variant
+brown sugar sticks,DG-6011,variant
+english mustard,SC-7003,variant
+dijon,SC-7004,variant
+instant coffee,BV-8002,variant
+steakhouse chips,FR-9002,variant
+laptop charger,,out-of-catalogue
+printer paper a4,,out-of-catalogue
+diesel fuel,,out-of-catalogue
+dog food,,out-of-catalogue
+office chairs,,out-of-catalogue
+lightbulbs,,out-of-catalogue
+car tyres,,out-of-catalogue
+paint brushes,,out-of-catalogue
