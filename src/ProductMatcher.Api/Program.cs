@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ProductMatcher.Api.ValidationExceptionHandler>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapCatalogueEndpoints();
+app.MapMatchEndpoints();
 
 await app.RunAsync();
 

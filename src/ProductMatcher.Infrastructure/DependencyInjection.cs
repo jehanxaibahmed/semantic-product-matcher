@@ -20,6 +20,7 @@ public static class DependencyInjection
 
         services.AddDbContext<MatcherDbContext>(o => o.UseNpgsql(connectionString, npgsql => npgsql.UseVector()));
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductSearch, ProductSearch>();
         services.AddSingleton<ICatalogueParser, CsvCatalogueParser>();
 
         services.Configure<EmbeddingOptions>(configuration.GetSection(EmbeddingOptions.SectionName));

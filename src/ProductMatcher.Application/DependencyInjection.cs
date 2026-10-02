@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ProductMatcher.Application.Catalogue;
+using ProductMatcher.Application.Matching;
 
 namespace ProductMatcher.Application;
 
@@ -10,6 +11,7 @@ public static class DependencyInjection
         services.AddSingleton(TimeProvider.System);
         services.AddScoped<CatalogueImportService>();
         services.AddScoped<CatalogueEmbeddingService>();
+        services.AddScoped<MatchService>();
         return services;
     }
 }
