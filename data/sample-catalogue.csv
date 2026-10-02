@@ -1,0 +1,152 @@
+sku,name,category,unit,description
+FP-1001,Red Peppers Large,Fresh Produce,5kg box,Large red bell peppers
+FP-1002,Red Peppers Small,Fresh Produce,5kg box,Small red bell peppers for stuffing
+FP-1003,Yellow Peppers Large,Fresh Produce,5kg box,Large yellow bell peppers
+FP-1004,Green Peppers Large,Fresh Produce,5kg box,Large green bell peppers
+FP-1005,Mixed Peppers Traffic Light,Fresh Produce,3 x 3 pack,Red yellow and green peppers
+FP-1006,Red Chillies,Fresh Produce,1kg bag,Fresh red chilli peppers
+FP-1007,Green Chillies,Fresh Produce,1kg bag,Fresh green chilli peppers
+FP-1008,Brown Onions,Fresh Produce,25kg sack,Medium brown onions
+FP-1009,Red Onions,Fresh Produce,10kg sack,Red onions
+FP-1010,Spring Onions,Fresh Produce,bunch x 12,Salad onions scallions
+FP-1011,Shallots Banana,Fresh Produce,5kg bag,Banana shallots
+FP-1012,Garlic Bulbs,Fresh Produce,1kg net,Whole garlic bulbs
+FP-1013,Garlic Peeled Cloves,Fresh Produce,1kg tub,Peeled garlic cloves
+FP-1014,Maris Piper Potatoes,Fresh Produce,25kg sack,Chipping and roasting potatoes
+FP-1015,Baby New Potatoes,Fresh Produce,10kg sack,Small new potatoes
+FP-1016,Sweet Potatoes,Fresh Produce,6kg box,Orange flesh sweet potatoes
+FP-1017,Carrots,Fresh Produce,10kg sack,Washed carrots
+FP-1018,Baby Carrots Chantenay,Fresh Produce,2kg bag,Chantenay carrots
+FP-1019,Iceberg Lettuce,Fresh Produce,case of 10,Iceberg lettuce heads
+FP-1020,Little Gem Lettuce,Fresh Produce,twin pack x 10,Little gem lettuce
+FP-1021,Rocket Leaves,Fresh Produce,1kg bag,Wild rocket salad leaves
+FP-1022,Baby Spinach,Fresh Produce,1kg bag,Washed baby spinach leaves
+FP-1023,Cherry Tomatoes,Fresh Produce,3kg box,Red cherry tomatoes
+FP-1024,Vine Tomatoes,Fresh Produce,5kg box,Tomatoes on the vine
+FP-1025,Beef Tomatoes,Fresh Produce,5kg box,Large beef tomatoes for slicing
+FP-1026,Cucumbers,Fresh Produce,case of 12,Whole cucumbers
+FP-1027,Courgettes,Fresh Produce,5kg box,Green courgettes zucchini
+FP-1028,Aubergines,Fresh Produce,5kg box,Aubergines eggplant
+FP-1029,Broccoli,Fresh Produce,5kg box,Broccoli heads
+FP-1030,Tenderstem Broccoli,Fresh Produce,1kg pack,Tenderstem broccoli spears
+FP-1031,Cauliflower,Fresh Produce,case of 6,Cauliflower heads
+FP-1032,Mushrooms Closed Cup,Fresh Produce,2.5kg punnet,White closed cup mushrooms
+FP-1033,Mushrooms Chestnut,Fresh Produce,2.5kg punnet,Chestnut mushrooms
+FP-1034,Lemons,Fresh Produce,box of 80,Unwaxed lemons
+FP-1035,Limes,Fresh Produce,box of 60,Fresh limes
+FP-1036,Avocados Hass,Fresh Produce,box of 20,Ready to eat hass avocados
+FP-1037,Bananas,Fresh Produce,18kg box,Yellow bananas
+FP-1038,Apples Gala,Fresh Produce,box of 100,Gala eating apples
+FP-1039,Strawberries,Fresh Produce,8 x 400g,British strawberries
+FP-1040,Fresh Coriander,Fresh Produce,100g bunch,Coriander cilantro herb
+FP-1041,Fresh Flat Leaf Parsley,Fresh Produce,100g bunch,Flat leaf parsley herb
+FP-1042,Fresh Basil,Fresh Produce,100g bunch,Sweet basil herb
+FP-1043,Root Ginger,Fresh Produce,1kg bag,Fresh ginger root
+DA-2001,Whole Milk,Dairy,6 x 2 litre,Fresh whole milk
+DA-2002,Semi Skimmed Milk,Dairy,6 x 2 litre,Fresh semi skimmed milk
+DA-2003,Skimmed Milk,Dairy,6 x 2 litre,Fresh skimmed milk
+DA-2004,Oat Milk Barista,Dairy,6 x 1 litre,Plant based oat drink for coffee
+DA-2005,Double Cream,Dairy,2 litre,Fresh double cream
+DA-2006,Single Cream,Dairy,2 litre,Fresh single cream
+DA-2007,Unsalted Butter,Dairy,10 x 250g,Unsalted butter blocks
+DA-2008,Salted Butter,Dairy,10 x 250g,Salted butter blocks
+DA-2009,Butter Portions,Dairy,box of 100,Individual salted butter portions
+DA-2010,Mature Cheddar Block,Dairy,5kg block,Mature white cheddar cheese
+DA-2011,Grated Mozzarella,Dairy,2kg bag,Grated mozzarella for pizza
+DA-2012,Buffalo Mozzarella,Dairy,10 x 125g,Fresh buffalo mozzarella balls
+DA-2013,Parmesan Wedge,Dairy,1kg,Parmigiano reggiano wedge
+DA-2014,Feta Cheese,Dairy,900g tub,Greek feta in brine
+DA-2015,Greek Yoghurt,Dairy,2kg tub,Strained greek style yoghurt
+DA-2016,Natural Yoghurt,Dairy,5kg tub,Plain natural yoghurt
+DA-2017,Free Range Eggs Large,Dairy,tray of 30,Large free range hen eggs
+DA-2018,Free Range Eggs Medium,Dairy,tray of 30,Medium free range hen eggs
+DA-2019,Liquid Egg Pasteurised,Dairy,1 litre,Pasteurised whole liquid egg
+MP-3001,Chicken Breast Fillets,Meat & Poultry,5kg,Skinless boneless chicken breast
+MP-3002,Chicken Thigh Fillets,Meat & Poultry,5kg,Boneless skinless chicken thighs
+MP-3003,Chicken Wings,Meat & Poultry,5kg,Whole chicken wings
+MP-3004,Whole Chicken,Meat & Poultry,box of 10,Whole chickens 1.6kg
+MP-3005,Beef Mince 20% Fat,Meat & Poultry,5kg,Minced beef 20 percent fat
+MP-3006,Beef Mince Lean 5% Fat,Meat & Poultry,5kg,Lean minced beef 5 percent fat
+MP-3007,Beef Sirloin Steak,Meat & Poultry,10 x 225g,Sirloin steaks
+MP-3008,Beef Brisket,Meat & Poultry,per kg,Boneless beef brisket
+MP-3009,Pork Sausages Cumberland,Meat & Poultry,box of 60,Cumberland pork sausages
+MP-3010,Back Bacon Rashers,Meat & Poultry,2kg pack,Smoked back bacon rashers
+MP-3011,Streaky Bacon,Meat & Poultry,2kg pack,Smoked streaky bacon
+MP-3012,Pork Belly,Meat & Poultry,per kg,Boneless pork belly
+MP-3013,Lamb Shoulder Diced,Meat & Poultry,2.5kg,Diced lamb shoulder
+MP-3014,Cooked Ham Sliced,Meat & Poultry,1kg pack,Sliced cooked ham
+FI-4001,Salmon Fillets Skin On,Fish & Seafood,10 x 140g,Scottish salmon portions skin on
+FI-4002,Cod Loins,Fish & Seafood,10 x 170g,Skinless cod loin portions
+FI-4003,Haddock Fillets Smoked,Fish & Seafood,2kg,Undyed smoked haddock
+FI-4004,King Prawns Raw,Fish & Seafood,1kg bag,Raw peeled king prawns frozen
+FI-4005,Tuna Chunks in Brine,Fish & Seafood,1.88kg tin,Skipjack tuna chunks in brine
+BK-5001,White Sliced Bread Medium,Bakery,800g loaf,Medium sliced white bread
+BK-5002,Wholemeal Sliced Bread,Bakery,800g loaf,Medium sliced wholemeal bread
+BK-5003,Sourdough Loaf,Bakery,each,Artisan white sourdough
+BK-5004,Brioche Burger Buns,Bakery,pack of 48,Sliced brioche buns
+BK-5005,Floured Baps,Bakery,pack of 48,Soft white floured rolls
+BK-5006,Croissants All Butter,Bakery,box of 60,Frozen all butter croissants
+BK-5007,Plain Tortilla Wraps 12 inch,Bakery,pack of 18,Large flour tortilla wraps
+BK-5008,Naan Bread,Bakery,pack of 24,Plain naan breads
+DG-6001,Basmati Rice,Dry Goods,10kg sack,Long grain basmati rice
+DG-6002,Long Grain Rice,Dry Goods,10kg sack,Easy cook long grain rice
+DG-6003,Arborio Risotto Rice,Dry Goods,5kg,Arborio rice for risotto
+DG-6004,Penne Pasta,Dry Goods,3kg,Dried penne pasta
+DG-6005,Spaghetti,Dry Goods,3kg,Dried spaghetti
+DG-6006,Fusilli Pasta,Dry Goods,3kg,Dried fusilli spirals
+DG-6007,Plain Flour,Dry Goods,16kg sack,Plain white flour
+DG-6008,Self Raising Flour,Dry Goods,16kg sack,Self raising white flour
+DG-6009,Caster Sugar,Dry Goods,5kg,Fine caster sugar
+DG-6010,Granulated Sugar,Dry Goods,25kg sack,White granulated sugar
+DG-6011,Sugar Sticks Brown,Dry Goods,box of 1000,Demerara sugar sachets sticks
+DG-6012,Rolled Porridge Oats,Dry Goods,3kg,Rolled oats for porridge
+DG-6013,Chopped Tomatoes Tinned,Dry Goods,6 x 2.5kg,Chopped tomatoes in tomato juice
+DG-6014,Baked Beans,Dry Goods,6 x 2.6kg,Baked beans in tomato sauce
+DG-6015,Chickpeas Tinned,Dry Goods,6 x 2.5kg,Chickpeas in water
+DG-6016,Coconut Milk Tinned,Dry Goods,12 x 400ml,Coconut milk
+DG-6017,Vegetable Stock Powder,Dry Goods,1.5kg tub,Vegetable bouillon powder
+DG-6018,Chicken Stock Paste,Dry Goods,1kg tub,Concentrated chicken stock
+DG-6019,Extra Virgin Olive Oil,Dry Goods,5 litre,Extra virgin olive oil
+DG-6020,Rapeseed Oil,Dry Goods,20 litre,Cold pressed rapeseed oil for frying
+DG-6021,Sunflower Oil,Dry Goods,20 litre,Refined sunflower frying oil
+DG-6022,Black Peppercorns,Dry Goods,1kg,Whole black peppercorns
+DG-6023,Sea Salt Flakes,Dry Goods,1.4kg tub,Sea salt flakes
+DG-6024,Smoked Paprika,Dry Goods,500g,Smoked paprika powder
+DG-6025,Ground Cumin,Dry Goods,500g,Ground cumin spice
+SC-7001,Tomato Ketchup,Sauces & Condiments,4.5 litre,Tomato ketchup pump bottle
+SC-7002,Mayonnaise Real,Sauces & Condiments,5 litre,Real mayonnaise
+SC-7003,English Mustard,Sauces & Condiments,2.25 litre,English mustard
+SC-7004,Dijon Mustard,Sauces & Condiments,1kg jar,Dijon mustard
+SC-7005,Soy Sauce Light,Sauces & Condiments,1.9 litre,Light soy sauce
+SC-7006,Sweet Chilli Sauce,Sauces & Condiments,2.2 litre,Sweet chilli dipping sauce
+SC-7007,Balsamic Vinegar,Sauces & Condiments,5 litre,Balsamic vinegar of modena
+SC-7008,Ketchup Sachets,Sauces & Condiments,box of 200,Tomato ketchup portion sachets
+SC-7009,Mayonnaise Sachets,Sauces & Condiments,box of 200,Mayonnaise portion sachets
+SC-7010,Pesto Green,Sauces & Condiments,1kg tub,Basil pesto
+BV-8001,Coffee Beans Espresso,Beverages,6 x 1kg,Espresso blend coffee beans
+BV-8002,Instant Coffee Granules,Beverages,750g tin,Instant coffee granules
+BV-8003,Tea Bags English Breakfast,Beverages,box of 1100,English breakfast tea bags
+BV-8004,Orange Juice Smooth,Beverages,12 x 1 litre,Not from concentrate orange juice
+BV-8005,Still Spring Water,Beverages,24 x 500ml,Still bottled water
+BV-8006,Sparkling Water,Beverages,24 x 500ml,Sparkling bottled water
+BV-8007,Cola Cans,Beverages,24 x 330ml,Cola soft drink cans
+BV-8008,Diet Cola Cans,Beverages,24 x 330ml,Sugar free diet cola cans
+BV-8009,Hot Chocolate Powder,Beverages,2kg tin,Drinking chocolate powder
+FR-9001,Frozen Chips Skin On,Frozen,4 x 2.5kg,Skin on fries 10mm
+FR-9002,Frozen Chips Steakhouse,Frozen,4 x 2.5kg,Thick cut steakhouse chips
+FR-9003,Frozen Peas,Frozen,4 x 2kg,Garden peas
+FR-9004,Frozen Mixed Vegetables,Frozen,4 x 2.5kg,Peas carrots sweetcorn green beans
+FR-9005,Vanilla Ice Cream,Frozen,5 litre tub,Dairy vanilla ice cream
+FR-9006,Frozen Mixed Berries,Frozen,1kg bag,Raspberries blackberries blueberries
+FR-9007,Beef Burgers Quarter Pounder,Frozen,box of 48,4oz beef burger patties
+FR-9008,Vegetable Spring Rolls,Frozen,box of 60,Mini vegetable spring rolls
+CL-9501,Blue Roll Centrefeed,Cleaning & Disposables,6 rolls,Blue paper centrefeed wipes
+CL-9502,Nitrile Gloves Blue Medium,Cleaning & Disposables,box of 100,Powder free nitrile gloves medium
+CL-9503,Nitrile Gloves Blue Large,Cleaning & Disposables,box of 100,Powder free nitrile gloves large
+CL-9504,Cling Film Catering,Cleaning & Disposables,450mm x 300m,Catering cling film roll
+CL-9505,Kitchen Foil,Cleaning & Disposables,450mm x 75m,Catering aluminium foil roll
+CL-9506,Washing Up Liquid,Cleaning & Disposables,5 litre,Concentrated washing up liquid
+CL-9507,Sanitiser Spray,Cleaning & Disposables,6 x 750ml,Food safe surface sanitiser
+CL-9508,Black Bin Bags Heavy Duty,Cleaning & Disposables,box of 200,Heavy duty refuse sacks
+CL-9509,Takeaway Coffee Cups 12oz,Cleaning & Disposables,box of 1000,Double wall paper cups 12oz
+CL-9510,Napkins White 2 Ply,Cleaning & Disposables,box of 2000,White 2 ply 33cm napkins

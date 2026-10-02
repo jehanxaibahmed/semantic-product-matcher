@@ -1,10 +1,10 @@
 using System.Net;
-using Microsoft.AspNetCore.Mvc.Testing;
+using ProductMatcher.IntegrationTests.Infrastructure;
 
 namespace ProductMatcher.IntegrationTests;
 
-public sealed class HealthEndpointTests(WebApplicationFactory<Program> factory)
-    : IClassFixture<WebApplicationFactory<Program>>
+[Collection(ApiTestGroup.Name)]
+public sealed class HealthEndpointTests(MatcherApiFactory factory)
 {
     [Fact]
     public async Task Health_returns_ok()
