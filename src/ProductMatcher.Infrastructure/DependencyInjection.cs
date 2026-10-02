@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IProductSearch, ProductSearch>();
         services.AddScoped<IMatchHistoryRepository, MatchHistoryRepository>();
         services.Configure<RerankingOptions>(configuration.GetSection(RerankingOptions.SectionName));
+        services.Configure<ConfidenceOptions>(configuration.GetSection(ConfidenceOptions.SectionName));
         services.AddSingleton<ICatalogueParser, CsvCatalogueParser>();
 
         var options = configuration.GetSection(EmbeddingOptions.SectionName).Get<EmbeddingOptions>() ?? new();

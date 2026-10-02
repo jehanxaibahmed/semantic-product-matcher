@@ -8,7 +8,8 @@ public sealed class MatchService(
     IEmbeddingProvider embeddings,
     IProductSearch search,
     IMatchHistoryRepository history,
-    IOptions<RerankingOptions> reranking)
+    IOptions<RerankingOptions> reranking,
+    IOptions<ConfidenceOptions> confidence)
 {
     public const int MaxTopK = 50;
     public const int MaxQueryLength = 500;
@@ -32,6 +33,7 @@ public sealed class MatchService(
         var vectors = await embeddings.EmbedAsync(normalized, cancellationToken).ConfigureAwait(false);
 
         var options = reranking.Value;
+        var thresholds = confidence.Value.For(embeddings.Model);
         var customerHistory = string.IsNullOrWhiteSpace(customerId)
             ? CustomerHistory.Empty
             : await history.GetHistoryAsync(customerId.Trim(), normalized.Distinct().ToList(), cancellationToken)
@@ -49,7 +51,8 @@ public sealed class MatchService(
                 candidates = CustomerReranker.Rerank(candidates, normalized[i], customerHistory, options);
             }
 
-            results.Add(new MatchResult(queries[i], normalized[i], candidates.Take(topK).ToList()));
+            var top = candidates.Take(topK).ToList();
+            results.Add(new MatchResult(queries[i], normalized[i], ConfidenceClassifier.Classify(top, thresholds), top));
         }
 
         return results;
