@@ -1,3 +1,5 @@
+using ProductMatcher.Domain.Matching;
+
 namespace ProductMatcher.Application.Matching;
 
 /// <summary>
@@ -10,4 +12,19 @@ public sealed record MatchCandidate(
     public double Score => Math.Min(1, Similarity + Boost);
 }
 
-public sealed record MatchResult(string Query, string NormalizedQuery, IReadOnlyList<MatchCandidate> Candidates);
+public sealed record MatchResult(
+    string Query, string NormalizedQuery, MatchDecision Decision, IReadOnlyList<MatchCandidate> Candidates);
+
+public sealed record BatchMatchResult(IReadOnlyList<MatchResult> Results, BatchSummary Summary)
+{
+    public static BatchMatchResult From(IReadOnlyList<MatchResult> results)
+    {
+        ArgumentNullException.ThrowIfNull(results);
+        return new BatchMatchResult(results, new BatchSummary(
+            results.Count(r => r.Decision.Band == ConfidenceBand.AutoAccept),
+            results.Count(r => r.Decision.Band == ConfidenceBand.NeedsReview),
+            results.Count(r => r.Decision.Band == ConfidenceBand.NoMatch)));
+    }
+}
+
+public sealed record BatchSummary(int AutoAccepted, int NeedsReview, int NoMatch);

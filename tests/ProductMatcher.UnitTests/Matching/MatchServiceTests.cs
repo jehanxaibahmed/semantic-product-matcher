@@ -15,7 +15,7 @@ public class MatchServiceTests
     private readonly InMemoryMatchHistoryRepository _history = new();
 
     private MatchService CreateService(FakeProductSearch search) =>
-        new(_embeddings, search, _history, Options.Create(new RerankingOptions()));
+        new(_embeddings, search, _history, Options.Create(new RerankingOptions()), Options.Create(new ConfidenceOptions()));
 
     [Fact]
     public async Task Embeds_the_normalised_query()

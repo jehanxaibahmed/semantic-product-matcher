@@ -17,8 +17,9 @@ internal static class MatchEndpoints
             .WithSummary("Return the top-k catalogue products for one customer-written product name.");
 
         group.MapPost("/batch", async (BatchMatchRequest request, MatchService matcher, CancellationToken ct) =>
-                Results.Ok(await matcher.MatchManyAsync(request.Queries, request.TopK ?? DefaultTopK, request.CustomerId, ct)))
-            .WithSummary("Match several order lines in one call.");
+                Results.Ok(BatchMatchResult.From(
+                    await matcher.MatchManyAsync(request.Queries, request.TopK ?? DefaultTopK, request.CustomerId, ct))))
+            .WithSummary("Match several order lines in one call, with a count per confidence band.");
 
         group.MapPost("/confirm", async (ConfirmRequest request, MatchFeedbackService feedback, CancellationToken ct) =>
                 await feedback.ConfirmAsync(request.CustomerId, request.Query, request.Sku, ct)

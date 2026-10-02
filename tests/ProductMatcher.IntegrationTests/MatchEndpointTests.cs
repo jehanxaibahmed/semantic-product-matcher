@@ -41,9 +41,9 @@ public sealed class MatchEndpointTests(MatcherApiFactory factory) : IAsyncLifeti
         var response = await client.PostAsJsonAsync(
             new Uri("/api/match/batch", UriKind.Relative),
             new { queries = new[] { "red onions", "basmati rice" }, topK = 1 });
-        var results = await response.Content.ReadFromJsonAsync<List<MatchResponse>>();
+        var batch = await response.Content.ReadFromJsonAsync<BatchResponse>();
 
-        Assert.Equal(["FP-1009", "DG-6001"], results!.Select(r => r.Candidates[0].Sku));
+        Assert.Equal(["FP-1009", "DG-6001"], batch!.Results.Select(r => r.Candidates[0].Sku));
     }
 
     [Fact]
@@ -57,7 +57,29 @@ public sealed class MatchEndpointTests(MatcherApiFactory factory) : IAsyncLifeti
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    private sealed record MatchResponse(string Query, string NormalizedQuery, List<Candidate> Candidates);
+    [Fact]
+    public async Task Batch_classifies_each_line_and_summarises_the_bands()
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync(
+            new Uri("/api/match/batch", UriKind.Relative),
+            new { queries = new[] { "nitrile gloves large", "chicken brest", "laptop charger" }, topK = 3 });
+        var batch = await response.Content.ReadFromJsonAsync<BatchResponse>();
+
+        Assert.Equal(["AutoAccept", "NeedsReview", "NoMatch"], batch!.Results.Select(r => r.Decision.Band));
+        Assert.Equal("CL-9503", batch.Results[0].Decision.Sku);
+        Assert.Null(batch.Results[2].Decision.Sku);
+        Assert.Equal(new Summary(1, 1, 1), batch.Summary);
+    }
+
+    private sealed record MatchResponse(string Query, string NormalizedQuery, Decision Decision, List<Candidate> Candidates);
+
+    private sealed record BatchResponse(List<MatchResponse> Results, Summary Summary);
+
+    private sealed record Decision(string Band, string? Sku, double TopScore, string Reason);
+
+    private sealed record Summary(int AutoAccepted, int NeedsReview, int NoMatch);
 
     private sealed record Candidate(string Sku, string Name, double Score);
 }
