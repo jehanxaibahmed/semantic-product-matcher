@@ -1,3 +1,4 @@
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using ProductMatcher.Application.Abstractions;
 
@@ -6,7 +7,7 @@ namespace ProductMatcher.Application.Catalogue;
 /// <summary>Embeds products that have no vector, or one from an older model, in batches.</summary>
 public sealed partial class CatalogueEmbeddingService(
     IProductRepository products,
-    IEmbeddingProvider embeddings,
+    IEmbeddingGenerator<string, Embedding<float>> embeddings,
     TimeProvider clock,
     ILogger<CatalogueEmbeddingService> logger)
 {
@@ -18,17 +19,19 @@ public sealed partial class CatalogueEmbeddingService(
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(batchSize);
 
         var total = 0;
+        var modelId = embeddings.GetService<EmbeddingGeneratorMetadata>()?.ProviderName ?? "unknown";
         while (true)
         {
-            var batch = await products.GetPendingEmbeddingAsync(embeddings.Model, batchSize, cancellationToken)
+            var batch = await products.GetPendingEmbeddingAsync(modelId, batchSize, cancellationToken)
                 .ConfigureAwait(false);
             if (batch.Count == 0)
             {
                 break;
             }
 
-            var vectors = await embeddings.EmbedAsync(batch.Select(p => p.SearchText).ToList(), cancellationToken)
+            var generated = await embeddings.GenerateAsync(batch.Select(p => p.SearchText).ToList(), cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
+            var vectors = generated.Select(e => e.Vector.ToArray()).ToList();
             if (vectors.Count != batch.Count)
             {
                 throw new InvalidOperationException(
@@ -38,7 +41,7 @@ public sealed partial class CatalogueEmbeddingService(
             var now = clock.GetUtcNow();
             for (var i = 0; i < batch.Count; i++)
             {
-                batch[i].SetEmbedding(vectors[i], embeddings.Model, now);
+                batch[i].SetEmbedding(vectors[i], modelId, now);
             }
 
             await products.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

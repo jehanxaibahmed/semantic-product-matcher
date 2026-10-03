@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProductMatcher.Domain.History;
 using ProductMatcher.Domain.Products;
-using ProductMatcher.Infrastructure.Embeddings.Caching;
-
 namespace ProductMatcher.Infrastructure.Persistence;
 
 public sealed class MatcherDbContext(DbContextOptions<MatcherDbContext> options) : DbContext(options)
@@ -10,8 +8,6 @@ public sealed class MatcherDbContext(DbContextOptions<MatcherDbContext> options)
     public DbSet<Product> Products => Set<Product>();
 
     public DbSet<MatchConfirmation> MatchHistory => Set<MatchConfirmation>();
-
-    internal DbSet<EmbeddingCacheEntry> EmbeddingCache => Set<EmbeddingCacheEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

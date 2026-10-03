@@ -1,5 +1,5 @@
+using Microsoft.Extensions.AI;
 using ProductMatcher.Application.Abstractions;
-using ProductMatcher.Infrastructure.Embeddings.Caching;
 
 namespace ProductMatcher.Api.Endpoints;
 
@@ -7,10 +7,10 @@ internal static class EmbeddingEndpoints
 {
     public static IEndpointRouteBuilder MapEmbeddingEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/embeddings/cache", (EmbeddingCacheMetrics metrics, IEmbeddingProvider provider) =>
-                Results.Ok(new { model = provider.Model, cache = metrics.Snapshot() }))
+        app.MapGet("/api/embeddings/info", (IEmbeddingGenerator<string, Embedding<float>> provider) =>
+                Results.Ok(new { model = provider.GetService<EmbeddingGeneratorMetadata>()?.ProviderName ?? "unknown" }))
             .WithTags("Embeddings")
-            .WithSummary("Embedding cache hit and miss counters since start-up.");
+            .WithSummary("Embedding model info.");
 
         return app;
     }

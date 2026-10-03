@@ -23,7 +23,7 @@ public class CatalogueEmbeddingServiceTests
         var embedded = await service.EmbedPendingAsync(default, batchSize: 2);
 
         Assert.Equal(5, embedded);
-        Assert.Equal([2, 2, 1], provider.Calls.Select(c => c.Count));
+        Assert.Equal([2, 2, 1], provider.Calls.Select(c => c.Count()));
         Assert.All(repository.Items, p => Assert.Equal("fake-model", p.EmbeddingModel));
     }
 

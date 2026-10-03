@@ -1,3 +1,4 @@
+using Microsoft.Extensions.AI;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +11,7 @@ using ProductMatcher.Application.Abstractions;
 using ProductMatcher.Application.Catalogue;
 using ProductMatcher.Application.Matching;
 using ProductMatcher.Infrastructure;
-using ProductMatcher.Infrastructure.Embeddings.Caching;
+
 using ProductMatcher.Infrastructure.Persistence;
 
 namespace ProductMatcher.Benchmark;
@@ -32,11 +33,11 @@ internal sealed class BenchmarkRunner(BenchmarkSettings settings)
         var (catalogueSize, embedMs) = await LoadCatalogueAsync(services, ct);
 
         var queries = BenchmarkData.LoadQueries(settings.QueriesPath);
-        var metrics = services.GetRequiredService<EmbeddingCacheMetrics>();
-        var model = services.GetRequiredService<IEmbeddingProvider>().Model;
+        
+        var model = services.GetRequiredService<Microsoft.Extensions.AI.IEmbeddingGenerator<string, Microsoft.Extensions.AI.Embedding<float>>>().GetService<Microsoft.Extensions.AI.EmbeddingGeneratorMetadata>()?.ProviderName ?? "unknown";
         var thresholds = services.GetRequiredService<IOptions<ConfidenceOptions>>().Value.For(model);
 
-        var cacheBeforeCold = metrics.Snapshot();
+        
         Console.WriteLine($"[{provider}] cold pass over {queries.Count} queries...");
         var cold = new List<QueryOutcome>(queries.Count);
         foreach (var query in queries)
@@ -44,7 +45,7 @@ internal sealed class BenchmarkRunner(BenchmarkSettings settings)
             cold.Add(await MatchOneAsync(services, query, ct));
         }
 
-        var cacheAfterCold = metrics.Snapshot();
+        
 
         Console.WriteLine($"[{provider}] warm pass (cache)...");
         var warm = new List<double>(queries.Count);
@@ -53,13 +54,13 @@ internal sealed class BenchmarkRunner(BenchmarkSettings settings)
             warm.Add((await MatchOneAsync(services, query, ct)).LatencyMs);
         }
 
-        var cacheAfterWarm = metrics.Snapshot();
+        
 
         Console.WriteLine($"[{provider}] personalisation...");
         var history = await RunHistoryAsync(services, ct);
 
         return new ProviderResult(
-            provider, model, catalogueSize, embedMs, cold, warm, cacheBeforeCold, cacheAfterCold, cacheAfterWarm, history,
+            provider, model, catalogueSize, embedMs, cold, warm, history,
             new ConfiguredThresholds(thresholds.AutoAcceptScore, thresholds.MinMargin, thresholds.ReviewScore));
     }
 

@@ -5,7 +5,7 @@ using ProductMatcher.UnitTests.Fakes;
 
 namespace ProductMatcher.UnitTests.Matching;
 
-public class MatchServiceTests
+public sealed class MatchServiceTests : IDisposable
 {
     private static readonly MatchCandidate RedLarge = new(Guid.NewGuid(), "FP-1001", "Red Peppers Large", "Fresh Produce", "5kg box", 0.90);
     private static readonly MatchCandidate RedSmall = new(Guid.NewGuid(), "FP-1002", "Red Peppers Small", "Fresh Produce", "5kg box", 0.85);
@@ -94,5 +94,10 @@ public class MatchServiceTests
     {
         await Assert.ThrowsAsync<MatchValidationException>(
             () => CreateService(new FakeProductSearch()).MatchAsync(new string('a', MatchService.MaxQueryLength + 1), 5, null, default));
+    }
+    
+    public void Dispose()
+    {
+        _embeddings.Dispose();
     }
 }
