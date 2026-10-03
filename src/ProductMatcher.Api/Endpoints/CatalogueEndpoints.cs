@@ -1,3 +1,4 @@
+using Microsoft.Extensions.AI;
 using ProductMatcher.Application.Abstractions;
 using ProductMatcher.Application.Catalogue;
 
@@ -18,8 +19,8 @@ internal static class CatalogueEndpoints
                 Results.Ok(new { embedded = await service.EmbedPendingAsync(ct) }))
             .WithSummary("Embed all pending products now instead of waiting for the background job.");
 
-        group.MapGet("/stats", async (IProductRepository products, IEmbeddingProvider embeddings, CancellationToken ct) =>
-                Results.Ok(await products.GetStatsAsync(embeddings.Model, ct)))
+        group.MapGet("/stats", async (IProductRepository products, IEmbeddingGenerator<string, Embedding<float>> embeddings, CancellationToken ct) =>
+                Results.Ok(await products.GetStatsAsync(embeddings.GetService<EmbeddingGeneratorMetadata>()?.ProviderName ?? "unknown", ct)))
             .WithSummary("Product counts and embedding progress.");
 
         app.MapGet("/api/products/{sku}", async (string sku, IProductRepository products, CancellationToken ct) =>

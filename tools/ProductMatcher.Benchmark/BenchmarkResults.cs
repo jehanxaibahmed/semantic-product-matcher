@@ -1,5 +1,5 @@
 using ProductMatcher.Domain.Matching;
-using ProductMatcher.Infrastructure.Embeddings.Caching;
+
 
 namespace ProductMatcher.Benchmark;
 
@@ -33,9 +33,6 @@ internal sealed record ProviderResult(
     double CatalogueEmbedMs,
     IReadOnlyList<QueryOutcome> Cold,
     IReadOnlyList<double> WarmLatenciesMs,
-    EmbeddingCacheSnapshot CacheBeforeCold,
-    EmbeddingCacheSnapshot CacheAfterCold,
-    EmbeddingCacheSnapshot CacheAfterWarm,
     IReadOnlyList<HistoryOutcome> History,
     ConfiguredThresholds Thresholds);
 

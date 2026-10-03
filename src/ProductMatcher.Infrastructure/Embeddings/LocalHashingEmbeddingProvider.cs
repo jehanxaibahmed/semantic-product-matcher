@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
-using ProductMatcher.Application.Abstractions;
 using ProductMatcher.Domain.Products;
+using Microsoft.Extensions.AI;
 
 namespace ProductMatcher.Infrastructure.Embeddings;
 
@@ -10,18 +10,29 @@ namespace ProductMatcher.Infrastructure.Embeddings;
 /// It catches spelling variants and word overlap but not synonyms. It is a baseline for tests
 /// and benchmarks, not a replacement for a real model.
 /// </summary>
-internal sealed class LocalHashingEmbeddingProvider : IEmbeddingProvider
+internal sealed class LocalHashingEmbeddingProvider : IEmbeddingGenerator<string, Embedding<float>>
 {
     private const float WordWeight = 1.0f;
     private const float TrigramWeight = 0.5f;
 
-    public string Model => "local-hashing-v1";
+    public EmbeddingGeneratorMetadata Metadata { get; } = new("local-hashing-v1");
 
-    public Task<IReadOnlyList<float[]>> EmbedAsync(IReadOnlyList<string> texts, CancellationToken cancellationToken)
+    public Task<GeneratedEmbeddings<Embedding<float>>> GenerateAsync(IEnumerable<string> values, EmbeddingGenerationOptions? options = null, CancellationToken cancellationToken = default)
     {
-        IReadOnlyList<float[]> vectors = texts.Select(Embed).ToList();
-        return Task.FromResult(vectors);
+        var embeddings = values.Select(text => new Embedding<float>(Embed(text))).ToList();
+        return Task.FromResult(new GeneratedEmbeddings<Embedding<float>>(embeddings));
     }
+    
+    public object? GetService(Type serviceType, object? serviceKey = null)
+    {
+        if (serviceType == typeof(EmbeddingGeneratorMetadata))
+        {
+            return Metadata;
+        }
+        return this.GetType() == serviceType ? this : null;
+    }
+    
+    public void Dispose() {}
 
     internal static float[] Embed(string text)
     {

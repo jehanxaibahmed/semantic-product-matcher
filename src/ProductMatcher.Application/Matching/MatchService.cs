@@ -1,3 +1,4 @@
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using ProductMatcher.Application.Abstractions;
 
@@ -5,7 +6,7 @@ namespace ProductMatcher.Application.Matching;
 
 /// <summary>Finds the catalogue products closest to customer-written text, personalised by match history.</summary>
 public sealed class MatchService(
-    IEmbeddingProvider embeddings,
+    IEmbeddingGenerator<string, Embedding<float>> embeddings,
     IProductSearch search,
     IMatchHistoryRepository history,
     IOptions<RerankingOptions> reranking,
@@ -30,10 +31,12 @@ public sealed class MatchService(
         Validate(queries, topK, customerId);
 
         var normalized = queries.Select(QueryNormalizer.Normalize).ToList();
-        var vectors = await embeddings.EmbedAsync(normalized, cancellationToken).ConfigureAwait(false);
+        var generated = await embeddings.GenerateAsync(normalized, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var vectors = generated.Select(e => e.Vector.ToArray()).ToList();
 
         var options = reranking.Value;
-        var thresholds = confidence.Value.For(embeddings.Model);
+        var modelId = embeddings.GetService<EmbeddingGeneratorMetadata>()?.ProviderName ?? "unknown";
+        var thresholds = confidence.Value.For(modelId);
         var customerHistory = string.IsNullOrWhiteSpace(customerId)
             ? CustomerHistory.Empty
             : await history.GetHistoryAsync(customerId.Trim(), normalized.Distinct().ToList(), cancellationToken)

@@ -2,13 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
-using OpenAI.Embeddings;
+using Microsoft.Extensions.AI;
+using OpenAI;
 using ProductMatcher.Application.Abstractions;
 using ProductMatcher.Application.Matching;
 using ProductMatcher.Infrastructure.Background;
 using ProductMatcher.Infrastructure.Catalogue;
 using ProductMatcher.Infrastructure.Embeddings;
-using ProductMatcher.Infrastructure.Embeddings.Caching;
 using ProductMatcher.Infrastructure.Persistence;
 
 namespace ProductMatcher.Infrastructure;
@@ -21,7 +21,7 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException("Connection string 'Matcher' is not configured.");
 
         // The factory also registers MatcherDbContext as scoped; singletons such as the cache store use the factory.
-        services.AddDbContextFactory<MatcherDbContext>(o => o.UseNpgsql(connectionString, npgsql => npgsql.UseVector()));
+        services.AddDbContextFactory<MatcherDbContext>(o => o.UseNpgsql(connectionString, npgsql => npgsql.UseVector()).ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductSearch, ProductSearch>();
         services.AddScoped<IMatchHistoryRepository, MatchHistoryRepository>();
@@ -53,8 +53,6 @@ public static class DependencyInjection
 
     private static void AddEmbeddings(IServiceCollection services, EmbeddingOptions options)
     {
-        services.AddSingleton<EmbeddingCacheMetrics>();
-
         if (string.Equals(options.Provider, "Ollama", StringComparison.OrdinalIgnoreCase))
         {
             services.AddHttpClient(OllamaHttpClientName, client =>
@@ -64,24 +62,15 @@ public static class DependencyInjection
             });
         }
 
-        if (!options.Cache.Enabled)
+        services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp =>
         {
-            services.AddSingleton(sp => CreateEmbeddingProvider(options, sp));
-            return;
-        }
-
-        services.AddSingleton<IEmbeddingCacheStore, PostgresEmbeddingCacheStore>();
-        services.AddSingleton<IEmbeddingProvider>(sp => new CachedEmbeddingProvider(
-            CreateEmbeddingProvider(options, sp),
-            new MemoryCache(new MemoryCacheOptions { SizeLimit = options.Cache.MemoryEntries }),
-            sp.GetRequiredService<IEmbeddingCacheStore>(),
-            sp.GetRequiredService<EmbeddingCacheMetrics>(),
-            sp.GetRequiredService<TimeProvider>()));
+            return CreateEmbeddingGenerator(options, sp);
+        });
     }
 
     private const string OllamaHttpClientName = "ollama";
 
-    private static IEmbeddingProvider CreateEmbeddingProvider(EmbeddingOptions options, IServiceProvider services)
+    private static IEmbeddingGenerator<string, Embedding<float>> CreateEmbeddingGenerator(EmbeddingOptions options, IServiceProvider services)
     {
         if (string.Equals(options.Provider, "Local", StringComparison.OrdinalIgnoreCase))
         {
@@ -97,7 +86,7 @@ public static class DependencyInjection
             }
 
             var http = services.GetRequiredService<IHttpClientFactory>().CreateClient(OllamaHttpClientName);
-            return new OllamaEmbeddingProvider(http, options.Model);
+            return new Microsoft.Extensions.AI.OllamaEmbeddingGenerator(new Uri(options.BaseUrl.TrimEnd('/') + "/"), options.Model, http);
         }
 
         if (!string.Equals(options.Provider, "OpenAI", StringComparison.OrdinalIgnoreCase))
@@ -107,6 +96,7 @@ public static class DependencyInjection
 
         var apiKey = options.ApiKey ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY")
             ?? throw new InvalidOperationException("OpenAI provider selected but no API key: set Embeddings:ApiKey or OPENAI_API_KEY.");
-        return new OpenAiEmbeddingProvider(new EmbeddingClient(options.Model, apiKey), options.Model);
+            
+        return new OpenAI.Embeddings.EmbeddingClient(options.Model, apiKey).AsIEmbeddingGenerator();
     }
 }
