@@ -1,3 +1,4 @@
+
 using ProductMatcher.Api.Endpoints;
 using ProductMatcher.Application;
 using ProductMatcher.Infrastructure;
@@ -10,10 +11,44 @@ builder.Services.AddProblemDetails();
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 builder.Services.AddExceptionHandler<ProductMatcher.Api.ValidationExceptionHandler>();
 builder.Services.AddOpenApi();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
 app.UseExceptionHandler();
+app.UseCors(b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path;
+    if (path.StartsWithSegments("/health") || 
+        path.StartsWithSegments("/openapi") || 
+        path.StartsWithSegments("/swagger") ||
+        path.StartsWithSegments("/scalar"))
+    {
+        await next(context);
+        return;
+    }
+
+    if (!context.Request.Headers.TryGetValue("X-API-Key", out var extractedApiKey))
+    {
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsJsonAsync(new { error = "API Key was not provided" });
+        return;
+    }
+
+    var config = context.RequestServices.GetRequiredService<IConfiguration>();
+    var expectedApiKey = config["ApiKey"] ?? "secret-key";
+
+    if (!expectedApiKey.Equals(extractedApiKey.ToString(), StringComparison.Ordinal))
+    {
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsJsonAsync(new { error = "Invalid API Key" });
+        return;
+    }
+
+    await next(context);
+});
 
 if (app.Configuration.GetValue("Database:MigrateOnStartup", true))
 {

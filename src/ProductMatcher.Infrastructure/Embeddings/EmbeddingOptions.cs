@@ -12,6 +12,9 @@ public sealed class EmbeddingOptions
     /// <summary>Falls back to the <c>OPENAI_API_KEY</c> environment variable.</summary>
     public string? ApiKey { get; set; }
 
+    /// <summary>Optional custom endpoint for OpenAI-compatible providers.</summary>
+    public string? Endpoint { get; set; }
+
     /// <summary>Ollama server address, used when <c>Provider</c> is <c>Ollama</c>.</summary>
     public string BaseUrl { get; set; } = "http://localhost:11434";
 

@@ -86,7 +86,8 @@ public static class DependencyInjection
             }
 
             var http = services.GetRequiredService<IHttpClientFactory>().CreateClient(OllamaHttpClientName);
-            return new Microsoft.Extensions.AI.OllamaEmbeddingGenerator(new Uri(options.BaseUrl.TrimEnd('/') + "/"), options.Model, http);
+            var generator = new Microsoft.Extensions.AI.OllamaEmbeddingGenerator(new Uri(options.BaseUrl.TrimEnd('/') + "/"), options.Model, http);
+            return new ZeroPaddingEmbeddingGenerator(generator, ProductMatcher.Domain.Products.Product.EmbeddingDimensions);
         }
 
         if (!string.Equals(options.Provider, "OpenAI", StringComparison.OrdinalIgnoreCase))
@@ -97,6 +98,12 @@ public static class DependencyInjection
         var apiKey = options.ApiKey ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY")
             ?? throw new InvalidOperationException("OpenAI provider selected but no API key: set Embeddings:ApiKey or OPENAI_API_KEY.");
             
-        return new OpenAI.Embeddings.EmbeddingClient(options.Model, apiKey).AsIEmbeddingGenerator();
+        var openAiOptions = new OpenAI.OpenAIClientOptions();
+        if (!string.IsNullOrWhiteSpace(options.Endpoint))
+        {
+            openAiOptions.Endpoint = new Uri(options.Endpoint);
+        }
+            
+        return new OpenAI.Embeddings.EmbeddingClient(options.Model, new System.ClientModel.ApiKeyCredential(apiKey), openAiOptions).AsIEmbeddingGenerator();
     }
 }
