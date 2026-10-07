@@ -10,6 +10,9 @@ namespace ProductMatcher.IntegrationTests.Infrastructure;
 /// <summary>Runs the API against a throwaway pgvector container with the offline embedder.</summary>
 public sealed class MatcherApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
+    /// <summary>API key the test app expects; sent automatically by every client from <see cref="ConfigureClient"/>.</summary>
+    public const string TestApiKey = "integration-test-key";
+
     private readonly PostgreSqlContainer _db = new PostgreSqlBuilder("pgvector/pgvector:pg17").Build();
 
     public async Task InitializeAsync() => await _db.StartAsync();
@@ -25,6 +28,13 @@ public sealed class MatcherApiFactory : WebApplicationFactory<Program>, IAsyncLi
         builder.UseSetting("ConnectionStrings:Matcher", _db.GetConnectionString());
         builder.UseSetting("Embeddings:Provider", "Local");
         builder.UseSetting("Embeddings:BackgroundJob", "false");
+        builder.UseSetting("ApiKey", TestApiKey);
+    }
+
+    protected override void ConfigureClient(HttpClient client)
+    {
+        base.ConfigureClient(client);
+        client.DefaultRequestHeaders.Add("X-API-Key", TestApiKey);
     }
 
     /// <summary>Clears all data so each test starts from an empty catalogue.</summary>
